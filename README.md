@@ -140,12 +140,12 @@ In this section, we provide an in-depth guide on configuring parameters within Y
 ### Basic training configurations
 The basic training configurations largely follow the original `Composer` package. For comprehensive details on these configurations, please refer to  [Composer's official documentation](https://docs.mosaicml.com/projects/composer/en/stable/). Here are some key training parameters to take note of:
 
-- `max_duration`: This parameter defines the maximum training duration and can be specified in either the number of steps (e.g., `3200ba``) or epochs (e.g., `1ep`). In our experiments, the pruning duration was set to `3200ba``, and the continued pre-training duration was set to `48000ba`.
+- `max_duration`: This parameter defines the maximum training duration and can be specified in either the number of steps (e.g., `3200ba`) or epochs (e.g., `1ep`). In our experiments, the pruning duration was set to `3200ba`, and the continued pre-training duration was set to `48000ba`.
 - `save_interval`: This parameter determines how frequently the model state is saved. We set it to `3200ba` for both the pruning and continued pre-training stages..
 - `t_warmup`: This parameter specifies the duration of the learning rate warm-up for the learning rate scheduler. In the case of pruning, it is set to `320ba` ($10%$ of training), while for continued pre-training, it is set to 1440ba ($3%$ of training).
 - `optimizer.lr`: This parameter defines the learning rate for the primary model parameters, with the default value being `1e-4`.
 - `max_seq_len`: Following the Llama 2 training methodology, we accommodate a maximum sequence length of 4096.
-- `device_train_microbatch_size`: This parameter determines the batch size per device during training. For the pruning stage, we configure it to `4``, whereas for continued pre-training, it is set to `16``.
+- `device_train_microbatch_size`: This parameter determines the batch size per device during training. For the pruning stage, we configure it to `4`, whereas for continued pre-training, it is set to `16`.
 - `global_train_batch_size`: This parameter specifies the global batch size across all GPUs during training. During the pruning stage, it is configured as `32`, while for continued pre-training, it is increased to `256`.
 - `autoresume`: This parameter can be enabled by setting it to `true` when resuming a run. However, it's important to note that while we have used it successfully during the continued pretraining stage, there is no guarantee of its compatibility with the pruning stage.
 
