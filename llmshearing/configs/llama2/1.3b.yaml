@@ -1,0 +1,132 @@
+data_local: /scratch/gpfs/mengzhou/space2/examples/examples/llm/llama-dedup
+data_remote: # If blank, files must be present in data_local
+tokenizer_name: /projects/DANQIC/mengzhou/LLaMA2/hf-7B
+max_seq_len: 4096
+global_seed: 17
+
+# Run Name
+run_name: # If left blank, will be read from env var $COMPOSER_RUN_NAME
+
+model:
+  name: mosaic_llama2_1.3b
+  init_device: "meta" 
+  tokenizer_name: ${tokenizer_name}
+  d_model: 2048
+  n_heads: 16
+  n_layers: 24 
+  intermediate_size: 5504
+  max_seq_len: ${max_seq_len}
+  vocab_size: 32000
+  init_std: 0.02
+  attn_pdrop: 0.0
+  resid_pdrop: 0.0
+  emb_pdrop: 0.0
+  attn_impl: flash
+  rms_norm_eps: 1e-5
+  l0_module: null
+
+# Tokenizer
+tokenizer:
+  type: hftokenizer
+  args:
+    tokenizer_name: ${tokenizer_name}
+    max_seq_len: ${max_seq_len}
+
+# Dataloaders
+train_loader:
+  name: text
+  dataset:
+    local: ${data_local}
+    remote: ${data_remote}
+    split: train_small
+    shuffle: true
+    tokenizer_name: ${tokenizer_name}
+    max_seq_len: ${max_seq_len}
+    shuffle_seed: ${global_seed}
+    is_uint16: true
+  drop_last: true
+  num_workers: 8
+
+eval_loader:
+  name: text
+  dataset:
+    local: ${data_local}
+    remote: ${data_remote}
+    split: val_small 
+    shuffle: false 
+    tokenizer_name: ${tokenizer_name}
+    max_seq_len: ${max_seq_len}
+    shuffle_seed: ${global_seed}
+    is_uint16: true
+  drop_last: false
+  num_workers: 8
+
+# Optimization
+scheduler:
+  name: cosine_with_warmup
+  t_warmup: 100ba
+  alpha_f: 0.1
+
+optimizer:
+  name: decoupled_adamw
+  lr: 1e-4
+  betas:
+  - 0.9
+  - 0.95
+  eps: 1.0e-08
+  weight_decay: 0.0
+  lag_lr: 1.0
+
+algorithms:
+  gradient_clipping:
+    clipping_type: norm
+    clipping_threshold: 1.0
+
+max_duration: 800ba 
+eval_interval: 100ba
+eval_subset_num_batches: 1000
+global_train_batch_size: 32 
+
+# System
+seed: ${global_seed}
+device_eval_batch_size: 8 
+device_train_microbatch_size: 8 
+precision: amp_bf16
+
+# FSDP
+fsdp_config:
+  sharding_strategy: FULL_SHARD
+  mixed_precision: DEFAULT
+  activation_checkpointing: true
+  activation_cpu_offload: false
+  verbose: false
+
+# Logging
+progress_bar: false
+log_to_console: true
+console_log_interval: 1ba
+
+callbacks:
+  speed_monitor:
+    window_size: 10
+  memory_monitor: {}
+  data_loading:
+    dynamic: false
+    update_type: doremi
+    proportion: 
+    set_names: 
+    target_loss: 
+
+
+loggers:
+  wandb: 
+    project: pruning
+    entity: pruning
+    name: ${run_name}
+    init_kwargs:
+      mode: offline
+      dir: wandb_dir
+
+# Checkpoint to local filesystem or remote object store
+save_interval: 800ba 
+save_folder: save_dir 
