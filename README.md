@@ -27,7 +27,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
   - [Citation](#citation)
 
 
-##  Breif Introduction 
+##  Brief Introduction 
 This codebase is built based on MosaicML's amazing [Composer package](https://github.com/mosaicml), which is specially designed and optimized for large language model pre-training. The entire implementation, including the `pruning` logic and the `dynamic batch loading` logic, are implemented as callback functions without touching the vanilla Composer trainer. Here's a concise overview of each folder within the codebase:
 - `shearing.data`: Contains sample data and scripts for data processing. 
 - `shearing.datasets`: Implements customized datasets to enable dynamic data loading.
