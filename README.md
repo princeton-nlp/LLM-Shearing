@@ -9,7 +9,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
 ## 🔗 Quick Links
 - [🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning](#-sheared-llama-accelerating-language-model-pre-training-via-structured-pruning)
   - [🔗 Quick Links](#-quick-links)
-  - [Breif Introduction](#breif-introduction)
+  - [Brief Introduction](#brief-introduction)
   - [Install Requirements](#install-requirements)
   - [Data Preparation](#data-preparation)
   - [Model Preparation](#model-preparation)
