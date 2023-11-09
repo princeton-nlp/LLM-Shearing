@@ -63,6 +63,10 @@ wandb_dir=${save_dir} # save locally
 
 if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
 
+# Run in bash, it will automatically use resources available in the current environment
+# composer $TRAIN_SCRIPT \
+
+# Run with slurm
 sbatch -p cli \
     --job-name ${run_name} \
     --nodes=4 \
