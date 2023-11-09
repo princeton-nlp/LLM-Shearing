@@ -16,7 +16,7 @@ from llmshearing.datasets.streaming_dataset import TextStreamingDataset
 
 def load_data(data_local, data_split, tokenizer_name):
     """ load data from a split """
-    return TextStreamingDataset(data_local, tokenizer_name=tokenizer_name, max_seq_len=2048, split=data_split)
+    return TextStreamingDataset(data_local, max_seq_len=2048, split=data_split)
 
 def merge_splits_with_no_bias():
     """ merge splits into one folder without bias, fully read and write, assumes the splits are in the same folder. """
