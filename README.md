@@ -9,7 +9,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
 ## 🔗 Quick Links
 - [🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning](#-sheared-llama-accelerating-language-model-pre-training-via-structured-pruning)
   - [🔗 Quick Links](#-quick-links)
-  - [Breif Introduction](#breif-introduction)
+  - [Brief Introduction](#brief-introduction)
   - [Install Requirements](#install-requirements)
   - [Data Preparation](#data-preparation)
   - [Model Preparation](#model-preparation)
@@ -27,7 +27,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
   - [Citation](#citation)
 
 
-##  Breif Introduction 
+##  Brief Introduction 
 This codebase is built based on MosaicML's amazing [Composer package](https://github.com/mosaicml), which is specially designed and optimized for large language model pre-training. The entire implementation, including the `pruning` logic and the `dynamic batch loading` logic, are implemented as callback functions without touching the vanilla Composer trainer. Here's a concise overview of each folder within the codebase:
 - `shearing.data`: Contains sample data and scripts for data processing. 
 - `shearing.datasets`: Implements customized datasets to enable dynamic data loading.
@@ -86,16 +86,16 @@ These functions exclusively work for LLaMA/LLaMA2 models. However, it should be 
 
 
 ## Sample Scripts for Pruning and Continued Pre-training
-For pruning, you can reference an example script located in [`llmshearing/scripts/pruning.sh`](llmshearing/scripts/train_pruning.sh).  In this script, you will need to make adjustments to incorporate [data configurations](), [basic training configurations](), [pruning configurations]() and [dynamic batch loading configurations](). 
+For pruning, you can reference an example script located in [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/pruning.sh).  In this script, you will need to make adjustments to incorporate [data configurations](), [basic training configurations](), [pruning configurations]() and [dynamic batch loading configurations](). 
 
 Due to the relatively higher computational cost of pruning compared to continued pre-training, we halt training with the pruning objective after a specific number of steps (typically 3200 steps in all our experiments). Subsequently, we proceed with further pre-training of the pruned model. To ensure compatibility, it is necessary to convert the state dictionary keys of the model to align with a standard target model structure. Detailed instructions for this conversion can be found at [Convert Pruned Model](#convert-pruned-model).
 
-After completing the model conversion, you can continue with the pre-training of the pruned model. The process is similar to pre-train a standard model. To do this, you can refer to an example script located at [`llmshearing/scripts/continue_pretraining.sh`](llmshearing/scripts/continue_pretraining.sh). In this script, the pruning configurations are eliminated.  
+After completing the model conversion, you can continue with the pre-training of the pruned model. The process is similar to pre-train a standard model. To do this, you can refer to an example script located at [`llmshearing/scripts/continue_pretraining.sh`]((https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/continue_pretraining.sh)). In this script, the pruning configurations are eliminated.  
 
 After training the model, you can use the conversion script to convert the composer model into a transformers model. Please refer to  [Section Convert Composer Model to Huggingface Model](#convert-composer-model-to-huggingface-model) for more details.
 
 ## Convert Pruned Model
-Following the completion of training using [`llmshearing/scripts/pruning.sh`](llmshearing/scripts/train_pruning.sh), the saved models consist of the entire parameters of the source model, accompanied by a set of masks. We then act upon the masking variables by 1) removing the substructures where the masking variables are near $0$, 2) subsuming the masking variables into the model parameters by matrix-vector multiplcaition, and it result in a more compact model. Simultaneously, it becomes necessary to rename the weight keys so that they can be seamlessly loaded into a target model architecture, ensuring that the layer names are all consecutive. 
+Following the completion of training using [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/pruning.sh), the saved models consist of the entire parameters of the source model, accompanied by a set of masks. We then act upon the masking variables by 1) removing the substructures where the masking variables are near $0$, 2) subsuming the masking variables into the model parameters by matrix-vector multiplcaition, and it result in a more compact model. Simultaneously, it becomes necessary to rename the weight keys so that they can be seamlessly loaded into a target model architecture, ensuring that the layer names are all consecutive. 
 
 ```
 MODEL_PATH=$MODEL_DIR/latest-rank0.pt
@@ -105,7 +105,7 @@ python3 -m llmshearing.utils.post_pruning_processing prune_and_save_model $MODEL
 The pruned model will be saved in `$(dirname $MODEL_PATH)/pruned-latest-rank0.pt`. 
 
 ## Convert Composer Model to Huggingface Model
-After training, if you'd like to use use huggingface for inference or fine-tuning, you may opt to transform your composer model into a Hugging Face model using the [`llmshearing/scripts/composer_to_hf.py`](llmshearing/utils/composer_to_hf.py) script. Here's an example of how to use the script:
+After training, if you'd like to use use huggingface for inference or fine-tuning, you may opt to transform your composer model into a Hugging Face model using the [`llmshearing/scripts/composer_to_hf.py`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/utils/composer_to_hf.py) script. Here's an example of how to use the script:
 
 ```
 MODEL_PATH=$MODEL_DIR/latest-rank0.pt
@@ -140,12 +140,12 @@ In this section, we provide an in-depth guide on configuring parameters within Y
 ### Basic training configurations
 The basic training configurations largely follow the original `Composer` package. For comprehensive details on these configurations, please refer to  [Composer's official documentation](https://docs.mosaicml.com/projects/composer/en/stable/). Here are some key training parameters to take note of:
 
-- `max_duration`: This parameter defines the maximum training duration and can be specified in either the number of steps (e.g., `3200ba``) or epochs (e.g., `1ep`). In our experiments, the pruning duration was set to `3200ba``, and the continued pre-training duration was set to `48000ba`.
+- `max_duration`: This parameter defines the maximum training duration and can be specified in either the number of steps (e.g., `3200ba`) or epochs (e.g., `1ep`). In our experiments, the pruning duration was set to `3200ba`, and the continued pre-training duration was set to `48000ba`.
 - `save_interval`: This parameter determines how frequently the model state is saved. We set it to `3200ba` for both the pruning and continued pre-training stages..
 - `t_warmup`: This parameter specifies the duration of the learning rate warm-up for the learning rate scheduler. In the case of pruning, it is set to `320ba` ($10%$ of training), while for continued pre-training, it is set to 1440ba ($3%$ of training).
 - `optimizer.lr`: This parameter defines the learning rate for the primary model parameters, with the default value being `1e-4`.
 - `max_seq_len`: Following the Llama 2 training methodology, we accommodate a maximum sequence length of 4096.
-- `device_train_microbatch_size`: This parameter determines the batch size per device during training. For the pruning stage, we configure it to `4``, whereas for continued pre-training, it is set to `16``.
+- `device_train_microbatch_size`: This parameter determines the batch size per device during training. For the pruning stage, we configure it to `4`, whereas for continued pre-training, it is set to `16`.
 - `global_train_batch_size`: This parameter specifies the global batch size across all GPUs during training. During the pruning stage, it is configured as `32`, while for continued pre-training, it is increased to `256`.
 - `autoresume`: This parameter can be enabled by setting it to `true` when resuming a run. However, it's important to note that while we have used it successfully during the continued pretraining stage, there is no guarantee of its compatibility with the pruning stage.
 
@@ -187,7 +187,7 @@ We extend [Steaming's StreamingDataset](https://github.com/mosaicml/streaming/bl
 The code is designed to exclusively accommodate local data and does not support remote streaming data. Additionally, it currently only functions with a single worker for the dataloader and does not offer prefetch support. In our testing, this restriction has does not incur any additional compute overhead.
 
 ## Throughput
-Here is the throughout of running the pruning and continued pretraining step with A100 80GB GPUs. The throughput is quantified in terms of tokens processed per second. 
+Here is the throughout of running the pruning and continued pretraining step with A100 80GB GPUs. The throughput is quantified in terms of tokens processed per second. The standard throughput of [llm-foundry](https://github.com/mosaicml/llm-foundry/blob/dd15791818fa53ae792de66d3529d94e0dcb83d9/scripts/train/benchmarking/README.md#a100-80gb-with-1600-gbps-node-node-interconnect-roce) is almost twice as fast as our implementation, so I believe that there is still space for improvement. 
 
 |           | GPUs           | Throughput per Device | Throughput   |
 |-----------|----------------|------------------------|--------------|
