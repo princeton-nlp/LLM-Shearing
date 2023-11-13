@@ -74,7 +74,7 @@ OUTPUT_PATH=models/Llama-2-7b-composer/state_dict.pt
 mkdir -p $(dirname $OUTPUT_PATH)
 
 # Convert the Hugging Face model to Composer key format
-python3 -m llmshearing.utils.composer_to_hf save_hf_to_composer $HF_MODEL_NAME $OUTPUT_PATH
+python3 -m llmshearing.utils.composer_to_hf $HF_MODEL_NAME $OUTPUT_PATH
 ```
 
 Additionally, you can use the following utility function to test the equivalence between the Hugging Face model and the converted Composer model:
