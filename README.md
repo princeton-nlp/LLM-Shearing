@@ -1,10 +1,14 @@
 # 🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning
-🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/) | [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B)
+🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/) | [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)
 
 Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](https://xiamengzhou.github.io/), [Tianyu Gao](https://gaotianyu.xyz/about/), [Zhiyuan Zeng](https://scholar.google.com/citations?user=qLJqCqsAAAAJ&hl=en), and [Danqi Chen](https://www.cs.princeton.edu/~danqic/). Here, we provide our codebase for Sheared-LLaMA's pruning and continued pre-training algorithms :) We find that pruning strong base models is an extremely cost-effective way to get strong small-scale language models compared to pre-training them from scratch. The following graph shows that given the existence of Llama-2-7B model (pre-trained with 2T tokens), pruning it produces a model as strong as an OpenLLaMA model with 3% of its pre-training cost. 
 
 <img src="images/teaserwlegend.jpg" alt="teaser" width="400" />
 
+** Update **
+- [11/19/2023] We released the [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m) model developed at early stages. It was produced using the same shearing recipe and the Pile dataset. 
+- [11/05/2023] We released the code on LLM-Shearing - excited to see it being applied to more models of different scales.
+- [10/10/2023] We released the Sheared-LLaMA paper, two Sheared LLaMA models and [tweeted about it](https://twitter.com/xiamengzhou/status/1712102912439226510) 🚀!
 
 ## 🔗 Quick Links
 - [🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning](#-sheared-llama-accelerating-language-model-pre-training-via-structured-pruning)
@@ -74,7 +78,7 @@ OUTPUT_PATH=models/Llama-2-7b-composer/state_dict.pt
 mkdir -p $(dirname $OUTPUT_PATH)
 
 # Convert the Hugging Face model to Composer key format
-python3 -m llmshearing.utils.composer_to_hf save_hf_to_composer $HF_MODEL_NAME $OUTPUT_PATH
+python3 -m llmshearing.utils.composer_to_hf $HF_MODEL_NAME $OUTPUT_PATH
 ```
 
 Additionally, you can use the following utility function to test the equivalence between the Hugging Face model and the converted Composer model:
