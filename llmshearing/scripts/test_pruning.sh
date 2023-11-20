@@ -26,9 +26,9 @@ device_eval_batch_size=8
 
 # learning setup
 lr=1e-4 # learning rate for the main parameters
-max_duration=3200ba # 0.42B tokens
-save_interval=3200ba # save in the end
-t_warmup=320ba # 10% learning rate warmup 
+max_duration=20ba # 0.42B tokens
+save_interval=5ba # save in the end
+t_warmup=2ba # 10% learning rate warmup 
 
 # dynamic loading setup
 dynamic=True
@@ -44,12 +44,12 @@ else
 fi
 eval_split_name=eval_merge # eval on all domains
 eval_target_model=false # evaluate on the current model, not the target model, otherwise the loss will be inaccurate
-eval_interval=50ba # eval every 50 batches and update the loading proportion
+eval_interval=5ba # eval every 50 batches and update the loading proportion
 
 
 # pruning setup
 lag_lr=1.0 # learning rate or l0_module
-lagr_warmup=640ba # 20% sparsity warmup
+lagr_warmup=4ba # 20% sparsity warmup
 if [[ $to_model == 1.3b ]]; then
     target_d_model=2048; target_n_heads=16; target_n_layers=24; target_intermediate_size=5504
 elif [[ $to_model == 3b ]]; then
