@@ -67,7 +67,6 @@ sbatch -p cli \
     $config_file \
     run_name=${run_name} \
     data_local=${data_local} \
-    path=${path} \
     eval_loader.dataset.split=${eval_split_name} \
     global_train_batch_size=${global_train_batch_size} \
     device_train_microbatch_size=${device_train_microbatch_size} \
@@ -82,6 +81,7 @@ sbatch -p cli \
     save_interval=${save_interval} \
     optimizer.lr=${lr} \
     model.l0_module=null \
+    model.path=${path} \
     callbacks.data_loading.dynamic=${dynamic} \
     callbacks.data_loading.set_names=${set_names} \
     callbacks.data_loading.proportion=${proportion} \

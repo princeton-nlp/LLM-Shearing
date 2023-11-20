@@ -14,6 +14,7 @@ test=True
 from_model=7b # source model size
 to_model=3b # target model size
 config_file=${PROJ_DIR}/llmshearing/configs/llama2/${from_model}.yaml
+path=$MODEL_PATH/mosaic-7B/state_dict.pt
 
 # data setup
 data_local=${DATA_DIR}
@@ -92,6 +93,7 @@ sbatch -p cli \
     save_interval=${save_interval} \
     optimizer.lr=${lr} \
     optimizer.lag_lr=${lag_lr} \
+    model.path=${path} \
     model.l0_module.lagrangian_warmup_steps=${lagr_warmup} \
     model.l0_module.pruning_modules='[head,intermediate,layer,hidden]' \
     model.l0_module.eval_target_model=${eval_target_model} \
