@@ -1,0 +1,4 @@
+{
+    "prompt_noinputs": null,
+    "prompt_inputs": "You are a helpful assistant. Write a response that appropriately completes the request.\n\n### Input:\n{input}\n\n### Response:"
+}
