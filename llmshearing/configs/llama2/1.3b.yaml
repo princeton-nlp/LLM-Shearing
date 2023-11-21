@@ -9,7 +9,7 @@ run_name: # If left blank, will be read from env var $COMPOSER_RUN_NAME
 
 model:
   name: mosaic_llama2_1.3b
-  init_device: "meta" 
+  init_device: "cpu" 
   tokenizer_name: ${tokenizer_name}
   d_model: 2048
   n_heads: 16

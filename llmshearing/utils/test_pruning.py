@@ -2,7 +2,6 @@
 from copy import deepcopy
 
 import torch
-
 from examples.llm.src.models.l0_module import L0Module
 from examples.llm.src.models.mosaic_llama_v2 import (ComposerMosaicLlama,
                                                      LlamaRMSNorm)
@@ -102,7 +101,7 @@ def test_full_z(model, l0_module, half=False, ones=False):
         print("test_full_z passed!")
 
 # passed
-def test_CoFi_LayerNorm(l0_module):
+def test_Shearing_LayerNorm(l0_module):
     from copy import deepcopy
 
     zs = get_full_zs(l0_module, half=True)
@@ -122,7 +121,7 @@ def test_CoFi_LayerNorm(l0_module):
     compressed_input = torch.index_select(input, dim=-1, index=remaining_index)
     out2 = layernorm2(compressed_input)
     assert out1.sum().item() == out2.sum().item()
-    print("test_CoFi_LayerNorm passed!")
+    print("test_Shearing_LayerNorm passed!")
 
 def nice_print(v1, v2):
     if torch.is_tensor(v1): v1 = v1.detach().cpu().numpy().item()
@@ -138,7 +137,7 @@ def eval(v1, v2, case_num=0):
         print(f"case {case_num} failed!")
              
 # passed 
-def test_CoFi_Attention(model, l0_module, half=False, ones=False):
+def test_Shearing_Attention(model, l0_module, half=False, ones=False):
     zs = get_full_zs(l0_module, half=True, ones=ones)
     device = next(model.parameters()).device
     
@@ -234,7 +233,7 @@ def test_CoFi_Attention(model, l0_module, half=False, ones=False):
         eval(v1, v2, 5)
          
 
-def test_CoFi_MLP(model, l0_module, half=False, ones=False):
+def test_Shearing_MLP(model, l0_module, half=False, ones=False):
     zs = get_full_zs(l0_module, half=half, ones=ones)
     mlp = deepcopy(model.model.transformer.blocks[0].mlp)
     device = next(model.parameters()).device
@@ -303,7 +302,7 @@ def test_CoFi_MLP(model, l0_module, half=False, ones=False):
      
     
 # passed
-def test_CoFi_decode_layer(model, l0_module, half=False, ones=False):
+def test_Shearing_decode_layer(model, l0_module, half=False, ones=False):
     zs = get_full_zs(l0_module, half=half, ones=ones)
     layer_num = 5
     layer = deepcopy(model.model.transformer.blocks[layer_num])
@@ -370,7 +369,7 @@ def test_CoFi_decode_layer(model, l0_module, half=False, ones=False):
     eval(v1, v2, 3)
 
 # passed
-def test_CoFi_llama_model(model, l0_module, half, ones=False):
+def test_Shearing_llama_model(model, l0_module, half, ones=False):
     zs = get_full_zs(l0_module, half=half, ones=ones)
     input_ids = load_input_ids(cuda=True)
     
@@ -405,12 +404,12 @@ if __name__ == "__main__":
     l0_module.train()
     
     ones = False 
-    test_CoFi_LayerNorm(l0_module)
+    test_Shearing_LayerNorm(l0_module)
     test_full_z(model, l0_module, half=True, ones=ones)
-    test_CoFi_Attention(model, l0_module, half=True, ones=ones)
-    test_CoFi_MLP(model, l0_module, half=True, ones=ones)
-    test_CoFi_decode_layer(model, l0_module, half=True, ones=ones)
-    test_CoFi_llama_model(model, l0_module, half=True, ones=ones)
+    test_Shearing_Attention(model, l0_module, half=True, ones=ones)
+    test_Shearing_MLP(model, l0_module, half=True, ones=ones)
+    test_Shearing_decode_layer(model, l0_module, half=True, ones=ones)
+    test_Shearing_llama_model(model, l0_module, half=True, ones=ones)
     # from hf_llama.tokenization_llama import LlamaTokenizer
     # tokenizer = LlamaTokenizer.from_pretrained("/scratch/gpfs/mengzhou/LLaMA/hf-7B")
     # import pdb; pdb.set_trace()

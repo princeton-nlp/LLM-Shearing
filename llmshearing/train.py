@@ -25,6 +25,7 @@ from omegaconf import OmegaConf as om
 from torch import nn
 from torch.optim.optimizer import Optimizer
 
+from llmshearing.callbacks.callbacks import DebugCallback
 from llmshearing.callbacks.dynamic_loading_callback import \
     DynamicLoadingCallback
 from llmshearing.callbacks.pruning_callback import PruningCallback
@@ -72,7 +73,9 @@ def load_weights(cfg: DictConfig):
 
 def load_state_dict(model: nn.Module, state_dict: Dict[str, Any]):
     """ load state dict to the model """
-    model.load_state_dict(state_dict, strict=False)
+    result = model.load_state_dict(state_dict, strict=False)
+    print("Model load state dict result: ", result)
+    print("Having missing rotary_emb.inv_freq keys is normal")
 
 def build_optimizer(model: torch.nn.Module, name: str,
                     optimizer_config: Dict[str, Any]) -> Optimizer:
@@ -91,7 +94,10 @@ def build_optimizer(model: torch.nn.Module, name: str,
     lag_lr = pop_config(optimizer_config, "lag_lr")
     if len(l0_module_params) > 0:
         param_groups.extend([{"params": l0_module_params, "lr": lag_lr}, {"params": lagrange_params, "lr": -(lag_lr)}])
-                            
+    
+    for i, group in enumerate(param_groups):
+        print(f"Group {i}:", f"{len(group['params'])} tensors", f"{sum(p.numel() for p in group['params'])} params", f"{group['lr']:.2e} lr")
+            
     if name == 'decoupled_adamw':
         return DecoupledAdamW(param_groups, **optimizer_config)
     elif name == 'decoupled_lionw':
@@ -181,7 +187,7 @@ def main(cfg):
     state_dict = load_weights(cfg)
     if state_dict is not None:
         load_state_dict(model, state_dict)
-    
+     
     cfg.n_params = sum(p.numel() for p in model.parameters())
     print(f'{cfg.n_params=:.2e}')
     if hasattr(model, 'num_fwd_flops'):
@@ -231,13 +237,15 @@ def main(cfg):
     ]
     if model.model.l0_module is not None: # pruning callback
         callbacks.append(PruningCallback(save_folder=cfg.save_folder))
-        
+    
+    # callbacks.append(DebugCallback())
+    
     # Algorithms
     algorithms = [
         build_algorithm(name, algorithm_cfg)
         for name, algorithm_cfg in (cfg.get('algorithms') or {}).items()
     ]
-        
+
     # Build the Trainer
     print('Building trainer...')
     trainer = Trainer(

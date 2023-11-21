@@ -1,19 +1,20 @@
 
-from composer import Callback, State, Logger
-from composer.loggers import Logger
-from composer.utils import dist
-import torch
-from torch.nn import functional as F
 import os
 import time
-from typing import Any, List
-from typing import Dict
+from typing import Any, Dict, List
+
+import torch
+from composer import Callback, Logger, State
+from composer.loggers import Logger
+from composer.utils import dist
+from torch.nn import functional as F
+
 
 class DebugCallback(Callback):
     def batch_start(self, state: State, logger: Logger) -> None:
         for b in state.batch["input_ids"]:
-            print(b)
-
+            print(b) 
+        
 def scatter_add_loss(instance_loss, set_ids):
     unique_set, counts = set_ids.unique(return_counts=True, sorted=True)
     set_loss = torch.zeros(set_ids.max().item() + 1, dtype=instance_loss.dtype, device=instance_loss.device).scatter_add_(0, set_ids, instance_loss)

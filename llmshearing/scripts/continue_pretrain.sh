@@ -1,6 +1,6 @@
-""" pruning llama2 7b -> 3b or 1.3b """
+# pruning llama2 7b -> 3b or 1.3b
 
-PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing-dev
+PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing
 DATA_DIR=/scratch/gpfs/mengzhou/llm_data/version5-uint16/500b_dedup_4k/for_ft
 OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release
 LAUNCH_SCRIPT=${PROJ_DIR}/llmshearing/scripts/launch.sh
@@ -8,10 +8,12 @@ TRAIN_SCRIPT=${PROJ_DIR}/llmshearing/train.py
 
 test=True
 
-model=3b # target model size
+model=1.3b # target model size
 config_file=${PROJ_DIR}/llmshearing/configs/llama2/${model}.yaml
 prune_run_name=llama2_7b_pruning_scaling_doremi_to${model}_sl4096
-path=${OUTPUT_DIR}/${prune_run_name}/pruned-latest-rank0.pt # path to the pruned model
+path=${OUTPUT_DIR}/${prune_run_name}/pruned-latest-rank0.pt # path to the 
+# pruned model
+path=/scratch/gpfs/mengzhou/space2/out/test_round23_mosaicml_version5/llama2_7b_pruning_doremi_to1.3b_sl4096/changedkeys-ep0-ba3200-rank0.pt
 
 # data setup
 data_local=${DATA_DIR}
@@ -51,19 +53,19 @@ wandb_dir=${save_dir} # save locally
 
 if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
 
+# Run with slurm
+# sbatch -p cli \
+#     --job-name ${run_name} \
+#     --nodes=8 \
+#     --gpus-per-node=2 \
+#     --mem=512gb \
+#     --cpus-per-task=8 \
+#     --time $t \
+#     $LAUNCH_SCRIPT \
+     
 
 # Run in bash, it will automatically use resources available in the current environment
-# composer $TRAIN_SCRIPT \
-
-# Run with slurm
-sbatch -p cli \
-    --job-name ${run_name} \
-    --nodes=8 \
-    --gpus-per-node=2 \
-    --mem=512gb \
-    --cpus-per-task=8 \
-    --time $t \
-    $LAUNCH_SCRIPT \
+composer $TRAIN_SCRIPT \
     $config_file \
     run_name=${run_name} \
     data_local=${data_local} \
@@ -73,7 +75,7 @@ sbatch -p cli \
     device_eval_batch_size=${device_eval_batch_size} \
     max_seq_len=${max_seq_len} \
     max_duration=${max_duration} \
-    eval_first=false \
+    eval_first=true \
     scheduler.t_warmup=${t_warmup} \
     save_folder=${save_dir} \
     loggers.wandb.init_kwargs.dir=${wandb_dir} \
@@ -90,4 +92,6 @@ sbatch -p cli \
     train_loader.num_workers=0 \
     train_loader.prefetch_factor=null \
     train_loader.persistent_workers=false \
-    autoresume=true
+    autoresume=false
+
+# checking eval_first

@@ -1,4 +1,4 @@
-""" pruning llama2 7b -> 3b or 1.3b """
+# pruning llama2 7b -> 3b or 1.3b
 
 # Please specify the working folder
 PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing
@@ -69,13 +69,15 @@ if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
 # composer $TRAIN_SCRIPT \
 
 # Run with slurm    
-sbatch -p cli \
-    --job-name ${run_name} \
-    --nodes=4 \
-    --gpus-per-node=2 \
-    --mem=512gb \
-    --cpus-per-task=8 \
-    --time $t \
+# sbatch -p cli \
+#     --job-name ${run_name} \
+#     --nodes=4 \
+#     --gpus-per-node=2 \
+#     --mem=512gb \
+#     --cpus-per-task=8 \
+#     --time $t \
+
+composer $TRAIN_SCRIPT \
     $LAUNCH_SCRIPT \
     $config_file \
     run_name=${run_name} \
