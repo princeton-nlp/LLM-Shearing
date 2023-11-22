@@ -1,7 +1,7 @@
 # 🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning
 <p align="center">
-🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/) 🌟 
-Base models: [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)  
+🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/) <br>
+Base models: [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)  <br>
 Instruction-tuned models: [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) | [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
 </p>
 
