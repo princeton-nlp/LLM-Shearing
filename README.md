@@ -1,11 +1,14 @@
 # 🦙 Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning
-🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/) | [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)
+🌟 [Paper](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/)  
+Base models: [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)  
+Instruction-tuned models: [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) | [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
 
 Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](https://xiamengzhou.github.io/), [Tianyu Gao](https://gaotianyu.xyz/about/), [Zhiyuan Zeng](https://zhiyuan-zeng.github.io/), and [Danqi Chen](https://www.cs.princeton.edu/~danqic/). Here, we provide our codebase for Sheared-LLaMA's pruning and continued pre-training algorithms :) We find that pruning strong base models is an extremely cost-effective way to get strong small-scale language models compared to pre-training them from scratch. The following graph shows that given the existence of Llama-2-7B model (pre-trained with 2T tokens), pruning it produces a model as strong as an OpenLLaMA model with 3% of its pre-training cost. 
 
 <img src="images/teaserwlegend.jpg" alt="teaser" width="400" />
 
 ** Update **
+- [11/22/2023] We released the instruction-tuned models [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) | [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT).
 - [11/19/2023] We released the [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m) model developed at early stages. It was produced using the same shearing recipe and the Pile dataset. 
 - [11/05/2023] We released the code on LLM-Shearing - excited to see it being applied to more models of different scales.
 - [10/10/2023] We released the Sheared-LLaMA paper, two Sheared LLaMA models and [tweeted about it](https://twitter.com/xiamengzhou/status/1712102912439226510) 🚀!
