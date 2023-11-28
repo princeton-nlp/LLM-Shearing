@@ -9,7 +9,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
 
 <img src="images/teaserwlegend.jpg" alt="teaser" width="400" />
 
-** Update **
+**Update**
 - [11/22/2023] We released the instruction-tuned models [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) and [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT).
 - [11/19/2023] We released the [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m) model developed at early stages. It was produced using the same shearing recipe and the Pile dataset. 
 - [11/05/2023] We released the code on LLM-Shearing - excited to see it being applied to more models of different scales.
