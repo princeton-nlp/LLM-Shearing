@@ -110,6 +110,7 @@ callbacks:
   speed_monitor:
     window_size: 10
   memory_monitor: {}
+  lr_monitor: {}
   data_loading:
     dynamic: false
     update_type: doremi

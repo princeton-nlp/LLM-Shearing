@@ -1,4 +1,4 @@
-""" pruning llama2 7b -> 3b or 1.3b """
+# pruning llama2 7b -> 3b or 1.3b
 
 # Please specify the working folder
 PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing
@@ -6,13 +6,14 @@ LAUNCH_SCRIPT=${PROJ_DIR}/llmshearing/scripts/launch.sh
 DATA_DIR=/scratch/gpfs/mengzhou/llm_data/version5-uint16/500b_dedup_4k/for_prune
 OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release_pruning
 TRAIN_SCRIPT=${PROJ_DIR}/llmshearing/train.py
+MODEL_PATH=/projects/DANQIC/mengzhou/LLaMA2
 
 # Specify $PROJ_DIR in scripts/launch.sh and scripts/srun_launch.sh if using slurm
 
-test=True
+test=False
 
 from_model=7b # source model size
-to_model=3b # target model size
+to_model=1.3b # target model size
 config_file=${PROJ_DIR}/llmshearing/configs/llama2/${from_model}.yaml
 path=$MODEL_PATH/mosaic-7B/state_dict.pt
 
@@ -27,9 +28,9 @@ device_eval_batch_size=8
 
 # learning setup
 lr=1e-4 # learning rate for the main parameters
-max_duration=20ba # 0.42B tokens
-save_interval=5ba # save in the end
-t_warmup=2ba # 10% learning rate warmup 
+max_duration=3200ba # 0.42B tokens
+save_interval=3200ba # save in the end
+t_warmup=320ba # 10% learning rate warmup 
 
 # dynamic loading setup
 dynamic=True
@@ -40,21 +41,25 @@ proportion=[0.67,0.045,0.045,0.02,0.045,0.025,0.15] # initial proportion of RP, 
 update_type=doremi 
 if [[ $to_model == 1.3b ]]; then
     target_loss=[1.9643,0.7459,2.1393,1.6117,1.7590,1.4449,2.1251] # 1.3b predicted loss from scaling law
-else
+elif [[ $to_model == 3b ]]; then
     target_loss=[1.8712,0.6883,2.0325,1.5353,1.6297,1.3560,2.0328] # 2.7b predicted loss from scaling law
+elif [[ $to_model == 370m ]]; then
+    target_loss=[2.1401,0.8694,2.3625,1.7791,2.047,1.6637,2.3139] # 370m predicted loss from scaling law
 fi
 eval_split_name=eval_merge # eval on all domains
 eval_target_model=false # evaluate on the current model, not the target model, otherwise the loss will be inaccurate
-eval_interval=5ba # eval every 50 batches and update the loading proportion
+eval_interval=50ba # eval every 50 batches and update the loading proportion
 
 
 # pruning setup
 lag_lr=1.0 # learning rate or l0_module
-lagr_warmup=4ba # 20% sparsity warmup
+lagr_warmup=640ba # 20% sparsity warmup
 if [[ $to_model == 1.3b ]]; then
     target_d_model=2048; target_n_heads=16; target_n_layers=24; target_intermediate_size=5504
 elif [[ $to_model == 3b ]]; then
     target_d_model=2560; target_n_heads=20; target_n_layers=32; target_intermediate_size=6912
+elif [[ $to_model == 370m ]]; then
+    target_d_model=1024; target_n_heads=8; target_n_layers=24; target_intermediate_size=2816
 fi
 
 # save directroy
@@ -68,8 +73,7 @@ if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
 # composer $TRAIN_SCRIPT \
 
 # Run with slurm    
-sbatch -p cli \
-    --job-name ${run_name} \
+sbatch --job-name ${run_name} \
     --nodes=4 \
     --gpus-per-node=2 \
     --mem=512gb \
