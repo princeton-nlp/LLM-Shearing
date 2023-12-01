@@ -196,7 +196,7 @@ We extend [Steaming's StreamingDataset](https://github.com/mosaicml/streaming/bl
 The code is designed to exclusively accommodate local data and does not support remote streaming data. Additionally, it currently only functions with a single worker for the dataloader and does not offer prefetch support. In our testing, this restriction has does not incur any additional compute overhead.
 
 ## Throughput
-Here is the throughout of running the pruning and continued pretraining step with A100 80GB GPUs. The throughput is quantified in terms of tokens processed per second. The standard throughput of [llm-foundry](https://github.com/mosaicml/llm-foundry/blob/dd15791818fa53ae792de66d3529d94e0dcb83d9/scripts/train/benchmarking/README.md#a100-80gb-with-1600-gbps-node-node-interconnect-roce) is almost twice as fast as our implementation, so I believe that there is still space for improvement. 
+Here is the throughout of running the pruning and continued pretraining step with A100 80GB GPUs. The throughput is quantified in terms of tokens processed per second. Please refer to the standard throughput of [llm-foundry](https://github.com/mosaicml/llm-foundry/blob/dd15791818fa53ae792de66d3529d94e0dcb83d9/scripts/train/benchmarking/README.md#a100-80gb-with-1600-gbps-node-node-interconnect-roce).
 
 |           | GPUs           | Throughput per Device | Throughput   |
 |-----------|----------------|------------------------|--------------|
