@@ -231,9 +231,10 @@ Please cite our paper if you find the repo helpful in your work:
 
 ```bibtex
 @article{xia2023sheared,
-   title={Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning},
-   author={Xia, Mengzhou and Gao, Tianyu, and Zeng, Zhiyuan and Chen, Danqi},
-   year={2023}
+  title={Sheared llama: Accelerating language model pre-training via structured pruning},
+  author={Xia, Mengzhou and Gao, Tianyu and Zeng, Zhiyuan and Chen, Danqi},
+  journal={arXiv preprint arXiv:2310.06694},
+  year={2023}
 }
 ```
 
