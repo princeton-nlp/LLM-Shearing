@@ -1,3 +1,7 @@
+## Pruning data for reproducibility purposes
+We've made the pruning data we used during the entire pruning process available on Google Drive [here](https://drive.google.com/drive/folders/1Y4c_dOSa3bAw--WCfZphxvMMOlMnFvpB). You can access it by clicking here. Alternatively, you have the option to process your own data as follows.
+
+
 ## Data preprocessing
 
 We provide preprocessing code to tokenize, sample, and process RedPajama data into MDS format ([Mosaic's streaming package](https://docs.mosaicml.com/projects/streaming/en/stable/index.html)). Here we have some sampled RedPajama data in `sample_redpajama`, but you should download the original [RedPajama](https://together.ai/blog/redpajama) data (or other data) and organize it in the following way: in your data directory, each folder is a domain and within the folder, there are a series of jsonl files. For the jsonl file format we follow the original RedPajama format.
@@ -49,3 +53,4 @@ python3 -m llmshearing.data.merge_data \
         --output_split eval_merge \
         --split_names domain1 domain2
 ```
+
