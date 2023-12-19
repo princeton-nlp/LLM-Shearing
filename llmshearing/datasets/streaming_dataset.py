@@ -389,8 +389,7 @@ class DynamicStreamingDataset(StreamingDataset):
             proportion = self.proportion
             stream_id = np.random.choice(range(self.num_streams), 1, p=proportion)[0].item()
             domain_sample_id = sample_ids_per_stream[stream_id]
-            domain_sample_id = domain_sample_id[self.used_num_samples_per_stream[stream_id] \
-                                % self.samples_per_stream[stream_id]]
+            domain_sample_id = domain_sample_id[self.used_num_samples_per_stream[stream_id] % self.samples_per_stream[stream_id]]
             self.used_num_samples_per_stream[stream_id] += 1
             yield self[domain_sample_id]
 

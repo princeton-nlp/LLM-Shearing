@@ -4,7 +4,7 @@
 PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing
 LAUNCH_SCRIPT=${PROJ_DIR}/llmshearing/scripts/launch.sh
 DATA_DIR=/scratch/gpfs/mengzhou/llm_data/version5-uint16/500b_dedup_4k/for_prune
-OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release_pruning
+OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release_pruning_h100
 TRAIN_SCRIPT=${PROJ_DIR}/llmshearing/train.py
 MODEL_PATH=/projects/DANQIC/mengzhou/LLaMA2
 
@@ -13,7 +13,7 @@ MODEL_PATH=/projects/DANQIC/mengzhou/LLaMA2
 test=False
 
 from_model=7b # source model size
-to_model=1.3b # target model size
+to_model=2.7b # target model size
 config_file=${PROJ_DIR}/llmshearing/configs/llama2/${from_model}.yaml
 path=$MODEL_PATH/mosaic-7B/state_dict.pt
 
@@ -56,7 +56,7 @@ lag_lr=1.0 # learning rate or l0_module
 lagr_warmup=640ba # 20% sparsity warmup
 if [[ $to_model == 1.3b ]]; then
     target_d_model=2048; target_n_heads=16; target_n_layers=24; target_intermediate_size=5504
-elif [[ $to_model == 3b ]]; then
+elif [[ $to_model == 2.7b ]]; then
     target_d_model=2560; target_n_heads=20; target_n_layers=32; target_intermediate_size=6912
 elif [[ $to_model == 370m ]]; then
     target_d_model=1024; target_n_heads=8; target_n_layers=24; target_intermediate_size=2816
@@ -73,13 +73,15 @@ if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
 # composer $TRAIN_SCRIPT \
 
 # Run with slurm    
-sbatch --job-name ${run_name} \
-    --nodes=4 \
-    --gpus-per-node=2 \
-    --mem=512gb \
-    --cpus-per-task=8 \
-    --time $t \
-    $LAUNCH_SCRIPT \
+# sbatch --job-name ${run_name} \
+#     --nodes=2 \
+#     --gpus-per-node=4 \
+#     --mem=512gb \
+#     --cpus-per-task=8 \
+#     --time $t \
+#     -p pli \
+    # $LAUNCH_SCRIPT \
+    composer $TRAIN_SCRIPT \
     $config_file \
     run_name=${run_name} \
     data_local=${data_local} \

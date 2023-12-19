@@ -4,7 +4,7 @@
 PROJ_DIR=/scratch/gpfs/mengzhou/space2/LLM-Shearing
 LAUNCH_SCRIPT=${PROJ_DIR}/llmshearing/scripts/launch.sh
 DATA_DIR=/scratch/gpfs/mengzhou/llm_data/version5-uint16/500b_dedup_4k/for_prune
-OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release_pruning
+OUTPUT_DIR=/scratch/gpfs/mengzhou/space2/out/test_release_pruning_full
 TRAIN_SCRIPT=${PROJ_DIR}/llmshearing/train.py
 MODEL_PATH=/projects/DANQIC/mengzhou/LLaMA2
 
@@ -13,7 +13,7 @@ MODEL_PATH=/projects/DANQIC/mengzhou/LLaMA2
 test=False
 
 from_model=7b # source model size
-to_model=1.3b # target model size
+to_model=2.7b # target model size
 config_file=${PROJ_DIR}/llmshearing/configs/llama2/${from_model}.yaml
 path=$MODEL_PATH/mosaic-7B/state_dict.pt
 
@@ -41,7 +41,7 @@ proportion=[0.67,0.045,0.045,0.02,0.045,0.025,0.15] # initial proportion of RP, 
 update_type=doremi 
 if [[ $to_model == 1.3b ]]; then
     target_loss=[1.9643,0.7459,2.1393,1.6117,1.7590,1.4449,2.1251] # 1.3b predicted loss from scaling law
-elif [[ $to_model == 3b ]]; then
+elif [[ $to_model == 2.7b ]]; then
     target_loss=[1.8712,0.6883,2.0325,1.5353,1.6297,1.3560,2.0328] # 2.7b predicted loss from scaling law
 elif [[ $to_model == 370m ]]; then
     target_loss=[2.1401,0.8694,2.3625,1.7791,2.047,1.6637,2.3139] # 410m predicted loss from scaling law
@@ -56,7 +56,7 @@ lag_lr=1.0 # learning rate or l0_module
 lagr_warmup=640ba # 20% sparsity warmup
 if [[ $to_model == 1.3b ]]; then
     target_d_model=2048; target_n_heads=16; target_n_layers=24; target_intermediate_size=5504
-elif [[ $to_model == 3b ]]; then
+elif [[ $to_model == 2.7b ]]; then
     target_d_model=2560; target_n_heads=20; target_n_layers=32; target_intermediate_size=6912
 elif [[ $to_model == 370m ]]; then
     target_d_model=1024; target_n_heads=8; target_n_layers=24; target_intermediate_size=2816
@@ -67,7 +67,7 @@ run_name=llama2_${from_model}_pruning_scaling_${update_type}_to${to_model}_sl${m
 save_dir=${OUTPUT_DIR}/${run_name}
 wandb_dir=${save_dir} # save locally
 
-if [[ $test == True ]]; then t=00-01:00:00; else t=01-00:00:00; fi
+if [[ $test == True ]]; then t=00-01:00:00; else t=00-20:00:00; fi
 
 # Run in bash, it will automatically use resources available in the current environment
 # composer $TRAIN_SCRIPT \
