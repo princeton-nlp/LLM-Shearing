@@ -29,7 +29,11 @@ We need to sample the data into eval, pruning, and fine-tuning, and encode them 
 bash sample_all_domains.sh
 ```
 
-In this script, you can control the source/target directory, sequence length, and how much data to sample for eval/pruning/fine-tuning respectively. Note that to make sure that there is no eval leakage, we first split all files in one domain to two disjoint sets, and sample eval from one set and pruning/fine-tuning from others -- that means you need to have at least two files for each domain. You can also change the domain sample ratio in the script. Similar to tokenization, you can use `SLURM_ARRAY_TASK_ID` to control which domain to work on, and this can be easily parallized by using a SLURM array job. In the end, the target data folder will look like this:
+In this script, you can control the source/target directory, sequence length, and how much data to sample for eval/pruning/fine-tuning respectively. Note that to make sure that there is no eval leakage, **we first split all files in one domain to two disjoint sets, and sample eval from one set and pruning/fine-tuning from others** -- that means you need to have at least two files for each domain. You can also change the domain sample ratio in the script. Similar to tokenization, you can use `SLURM_ARRAY_TASK_ID` to control which domain to work on, and this can be easily parallized by using a SLURM array job. 
+
+**Note: our code will try to sample an equal amount of samples in different files for a diverse distribution. We suggest you split each domain into many equal-size files. If there are too few files or the file sizes vary a lot, it might lead to imbalanced sampling.**
+
+In the end, the target data folder will look like this:
 
 ```
 eval
