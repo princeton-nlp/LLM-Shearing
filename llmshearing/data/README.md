@@ -1,5 +1,5 @@
 ## Pruning data for reproducibility purposes
-We've made the pruning data we used during the entire pruning process available on Google Drive [here](https://drive.google.com/drive/folders/1Y4c_dOSa3bAw--WCfZphxvMMOlMnFvpB). You can access it by clicking here. Alternatively, you have the option to process your own data as follows.
+We've made the pruning data we used during the entire pruning process available on Google Drive [here](https://drive.google.com/drive/folders/1A_-88BqcOGa1Pbo-1ZShG2saU0cdRZgK). You can access it by clicking here. Alternatively, you have the option to process your own data as follows.
 
 
 ## Data preprocessing
