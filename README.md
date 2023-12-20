@@ -10,6 +10,7 @@ Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](
 <img src="images/teaserwlegend.jpg" alt="teaser" width="400" />
 
 **Update**
+- [12/19/2023] Updated the [evaluation scripts](https://github.com/princeton-nlp/LLM-Shearing/blob/master/icl_eval) and pruning logs in the repo. 
 - [11/22/2023] We released the instruction-tuned models [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) and [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT).
 - [11/19/2023] We released the [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m) model developed at early stages. It was produced using the same shearing recipe and the Pile dataset. 
 - [11/05/2023] We released the code on LLM-Shearing - excited to see it being applied to more models of different scales.
@@ -95,16 +96,16 @@ These functions exclusively work for LLaMA/LLaMA2 models. However, it should be 
 
 
 ## Sample Scripts for Pruning and Continued Pre-training
-For pruning, you can reference an example script located in [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/pruning.sh).  In this script, you will need to make adjustments to incorporate [data configurations](), [basic training configurations](), [pruning configurations]() and [dynamic batch loading configurations](). 
+For pruning, you can reference an example script located in [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing/blob/master/llmshearing/scripts/pruning.sh).  In this script, you will need to make adjustments to incorporate [data configurations](), [basic training configurations](), [pruning configurations]() and [dynamic batch loading configurations](). 
 
 Due to the relatively higher computational cost of pruning compared to continued pre-training, we halt training with the pruning objective after a specific number of steps (typically 3200 steps in all our experiments). Subsequently, we proceed with further pre-training of the pruned model. To ensure compatibility, it is necessary to convert the state dictionary keys of the model to align with a standard target model structure. Detailed instructions for this conversion can be found at [Convert Pruned Model](#convert-pruned-model).
 
-After completing the model conversion, you can continue with the pre-training of the pruned model. The process is similar to pre-train a standard model. To do this, you can refer to an example script located at [`llmshearing/scripts/continue_pretraining.sh`]((https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/continue_pretraining.sh)). In this script, the pruning configurations are eliminated.  
+After completing the model conversion, you can continue with the pre-training of the pruned model. The process is similar to pre-train a standard model. To do this, you can refer to an example script located at [`llmshearing/scripts/continue_pretraining.sh`]((https://github.com/princeton-nlp/LLM-Shearing/blob/master/llmshearing/scripts/continue_pretraining.sh)). In this script, the pruning configurations are eliminated.  
 
 After training the model, you can use the conversion script to convert the composer model into a transformers model. Please refer to  [Section Convert Composer Model to Huggingface Model](#convert-composer-model-to-huggingface-model) for more details.
 
 ## Convert Pruned Model
-Following the completion of training using [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/scripts/pruning.sh), the saved models consist of the entire parameters of the source model, accompanied by a set of masks. We then act upon the masking variables by 1) removing the substructures where the masking variables are near $0$, 2) subsuming the masking variables into the model parameters by matrix-vector multiplcaition, and it result in a more compact model. Simultaneously, it becomes necessary to rename the weight keys so that they can be seamlessly loaded into a target model architecture, ensuring that the layer names are all consecutive. 
+Following the completion of training using [`llmshearing/scripts/pruning.sh`](https://github.com/princeton-nlp/LLM-Shearing/blob/master/llmshearing/scripts/pruning.sh), the saved models consist of the entire parameters of the source model, accompanied by a set of masks. We then act upon the masking variables by 1) removing the substructures where the masking variables are near $0$, 2) subsuming the masking variables into the model parameters by matrix-vector multiplcaition, and it result in a more compact model. Simultaneously, it becomes necessary to rename the weight keys so that they can be seamlessly loaded into a target model architecture, ensuring that the layer names are all consecutive. 
 
 ```
 MODEL_PATH=$MODEL_DIR/latest-rank0.pt
@@ -114,7 +115,7 @@ python3 -m llmshearing.utils.post_pruning_processing prune_and_save_model $MODEL
 The pruned model will be saved in `$(dirname $MODEL_PATH)/pruned-latest-rank0.pt`. 
 
 ## Convert Composer Model to Huggingface Model
-After training, if you'd like to use use huggingface for inference or fine-tuning, you may opt to transform your composer model into a Hugging Face model using the [`llmshearing/scripts/composer_to_hf.py`](https://github.com/princeton-nlp/LLM-Shearing-dev/blob/master/llmshearing/utils/composer_to_hf.py) script. Here's an example of how to use the script:
+After training, if you'd like to use use huggingface for inference or fine-tuning, you may opt to transform your composer model into a Hugging Face model using the [`llmshearing/scripts/composer_to_hf.py`](https://github.com/princeton-nlp/LLM-Shearing/blob/master/llmshearing/utils/composer_to_hf.py) script. Here's an example of how to use the script:
 
 ```
 MODEL_PATH=$MODEL_DIR/latest-rank0.pt

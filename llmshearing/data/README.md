@@ -1,5 +1,5 @@
 ## Pruning data for reproducibility purposes
-We've made the pruning data we used during the entire pruning process available on Google Drive [here](https://drive.google.com/drive/folders/1Y4c_dOSa3bAw--WCfZphxvMMOlMnFvpB). You can access it by clicking here. Alternatively, you have the option to process your own data as follows.
+We've made the pruning data we used during the entire pruning process available on Google Drive [here](https://drive.google.com/drive/folders/1A_-88BqcOGa1Pbo-1ZShG2saU0cdRZgK). You can access it by clicking here. Alternatively, you have the option to process your own data as follows.
 
 
 ## Data preprocessing
@@ -29,7 +29,11 @@ We need to sample the data into eval, pruning, and fine-tuning, and encode them 
 bash sample_all_domains.sh
 ```
 
-In this script, you can control the source/target directory, sequence length, and how much data to sample for eval/pruning/fine-tuning respectively. Note that to make sure that there is no eval leakage, we first split all files in one domain to two disjoint sets, and sample eval from one set and pruning/fine-tuning from others -- that means you need to have at least two files for each domain. You can also change the domain sample ratio in the script. Similar to tokenization, you can use `SLURM_ARRAY_TASK_ID` to control which domain to work on, and this can be easily parallized by using a SLURM array job. In the end, the target data folder will look like this:
+In this script, you can control the source/target directory, sequence length, and how much data to sample for eval/pruning/fine-tuning respectively. Note that to make sure that there is no eval leakage, **we first split all files in one domain to two disjoint sets, and sample eval from one set and pruning/fine-tuning from others** -- that means you need to have at least two files for each domain. You can also change the domain sample ratio in the script. Similar to tokenization, you can use `SLURM_ARRAY_TASK_ID` to control which domain to work on, and this can be easily parallized by using a SLURM array job. 
+
+**Note: our code will try to sample an equal amount of samples in different files for a diverse distribution. We suggest you split each domain into many equal-size files. If there are too few files or the file sizes vary a lot, it might lead to imbalanced sampling.**
+
+In the end, the target data folder will look like this:
 
 ```
 eval
