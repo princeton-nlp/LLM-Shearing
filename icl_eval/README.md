@@ -9,8 +9,7 @@ pip install -e .
 After installation, please refer to `run_eval.sh` to check out how to run evaluations with the pruned models and source models. 
 
 ### Metrics for each task
-We use the following metrics for each task
-Sure, I'll convert this into a markdown table for you. Please note that I'll ignore the line numbers and focus on the key-value pairs:
+We use the following metrics for each task:
 
 | Task              | Metric                |
 |------------------|----------------------|
