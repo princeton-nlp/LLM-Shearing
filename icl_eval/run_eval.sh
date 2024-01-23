@@ -19,3 +19,8 @@ bash $harness_dir/hf_open_llm.sh $model hendrycksTest-abstract_algebra,hendrycks
 bash $harness_dir/hf_open_llm.sh $model hellaswag 10 hellaswag5shot-$modelname
 bash $harness_dir/hf_open_llm.sh $model arc_challenge 25 arcc5shot-$modelname
 bash $harness_dir/hf_open_llm.sh $model truthfulqa_mc 0 truthfulqa5shot-$modelname
+
+# others
+bash $harness_dir/hf_open_llm.sh $model nq_open 32 nq_open32shot-$modelname
+bash $harness_dir/hf_open_llm.sh $model boolq 32 boolq32shot-$modelname
+bash $harness_dir/hf_open_llm.sh $model gsm8k  8 gsm8k8shot-$modelname
