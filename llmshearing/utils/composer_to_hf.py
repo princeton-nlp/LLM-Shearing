@@ -96,7 +96,8 @@ def save_composer_to_hf(composer_model_path, output_path=None, model_config:om =
 
     model = AutoModelForCausalLM.from_config(config)
     model.load_state_dict(hf_weights, strict=False)
-    model.save_pretrained(output_path)
+    model = model.bfloat16()
+    model.save_pretrained(output_path, dtype=torch.float16)
     
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_nanme)
     tokenizer.save_pretrained(output_path)
