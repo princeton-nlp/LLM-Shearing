@@ -85,8 +85,10 @@ def construct_hf_config(model_config: om = None):
         
 def save_composer_to_hf(composer_model_path, output_path=None, model_config:om = None):
     """ convert composer ckpt's weights to huggingface """
-    
-    weights = torch.load(composer_model_path)["state"]["model"]
+
+    weights = torch.load(composer_model_path)
+    if "state" in weights:
+        weights = weights["state"]["model"]
     num_layers = get_layer_num_from_weights(weights)
     keymap = get_key_map_from_composer_to_hf(num_layers)
     hf_weights = {keymap[key]: weights[key] for key in weights if "rotary" not in key}
