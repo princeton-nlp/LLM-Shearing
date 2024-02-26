@@ -2,7 +2,8 @@
 
 🌟 [ArXiv Preprint](https://arxiv.org/abs/2310.06694) | [Blog Post](https://xiamengzhou.github.io/sheared-llama/)  
 
-Base models: [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)   
+Base models: [Sheared-LLaMA-1.3B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B) | [Sheared-LLaMA-2.7B](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B) | [Sheared-Pythia-160m](https://huggingface.co/princeton-nlp/Sheared-Pythia-160m/tree/main)  
+Pruned Models without Continued Pre-training: [Sheared-LLaMA-1.3B-Pruned](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-Pruned), [Sheared-LLaMA-2.7B-Pruned](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-Pruned)  
 Instruction-tuned models: [Sheared-LLaMA-1.3B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-1.3B-ShareGPT) | [Sheared-LLaMA-2.7B-ShareGPT](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
 
 Thank you for your interest in our work! This is a joint work by [Mengzhou Xia](https://xiamengzhou.github.io/), [Tianyu Gao](https://gaotianyu.xyz/about/), [Zhiyuan Zeng](https://zhiyuan-zeng.github.io/), and [Danqi Chen](https://www.cs.princeton.edu/~danqic/). Here, we provide our codebase for Sheared-LLaMA's pruning and continued pre-training algorithms :) We find that pruning strong base models is an extremely cost-effective way to get strong small-scale language models compared to pre-training them from scratch. The following graph shows that given the existence of Llama-2-7B model (pre-trained with 2T tokens), pruning it produces a model as strong as an OpenLLaMA model with 3% of its pre-training cost. 
@@ -84,7 +85,7 @@ OUTPUT_PATH=models/Llama-2-7b-composer/state_dict.pt
 mkdir -p $(dirname $OUTPUT_PATH)
 
 # Convert the Hugging Face model to Composer key format
-python3 -m llmshearing.utils.composer_to_hf $HF_MODEL_NAME $OUTPUT_PATH
+python3 -m llmshearing.utils.composer_to_hf save_hf_to_composer $HF_MODEL_NAME $OUTPUT_PATH
 ```
 
 Additionally, you can use the following utility function to test the equivalence between the Hugging Face model and the converted Composer model:
@@ -128,7 +129,7 @@ NUM_HIDDEN_LAYERS=24
 INTERMEDIATE_SIZE=5504
 MODEL_NAME=Sheared-Llama-1.3B
 
-python3 -m llmshearing.utils.composer_to_hf $MODEL_PATH $OUTPUT_PATH \
+python3 -m llmshearing.utils.composer_to_hf save_composer_to_hf $MODEL_PATH $OUTPUT_PATH \
         model_class=${MODEL_CLASS} \
         hidden_size=${HIDDEN_SIZE} \
         num_attention_heads=${NUM_ATTENTION_HEADS} \
