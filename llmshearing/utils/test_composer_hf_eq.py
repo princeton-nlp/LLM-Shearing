@@ -10,6 +10,9 @@ def construct_example_cfg(model_size, path=None, add_l0_module=False):
     if model_size == "toy":
         cfg = om.create({"name": "mosaic_llama_100m", "init_device": "cpu", "d_model": 768, 
                          "n_heads": 12, "n_layers": 12, "intermediate_size": 3072})
+    if model_size == "1.3B":
+        cfg = om.create({"name": "mosaic_llama_1.3b", "path": path, "init_device": "cpu", "d_model": 2048, 
+                         "n_heads": 16, "n_layers": 24, "intermediate_size": 5504})
     if model_size == "7B":
         cfg = om.create({"name": "mosaic_llama_7b", "path": path, "init_device": "cpu",
                          "d_model": 4096, "n_heads": 32, "n_layers": 32, "intermediate_size": 11008})
@@ -43,6 +46,8 @@ if __name__ == "__main__":
     
     hf_llama2_path = sys.argv[1]
     composer_llama2_path = sys.argv[2]
+    model_size = sys.argv[3]
+    
     tokenizer = AutoTokenizer.from_pretrained(hf_llama2_path)
     text = "Chamath Palihapitiya (born 3 September 1976)[1] is a Sri Lankan-born Canadian and American venture capitalist, engineer, SPAC sponsor, founder and CEO of Social Capital. Palihapitiya was an early senior executive at Facebook, working at the company from 2007 to 2011. Following his departure from Facebook, Palihapitiya started his fund, The Social+Capital Partnership, through which he invested in several companies, including Yammer and Slack. "
     input_ids = tokenizer.encode(text, return_tensors="pt")
@@ -52,7 +57,7 @@ if __name__ == "__main__":
     hf_model = AutoModelForCausalLM.from_pretrained(hf_llama2_path)
     hf_loss = hf_model(input_ids, labels=input_ids).loss
 
-    cfg = construct_example_cfg("7B")
+    cfg = construct_example_cfg(model_size)
     composer_model = ComposerMosaicLlama(cfg)
     # rotary_emb.inv_freq can be missing
     composer_model.load_state_dict(torch.load(composer_llama2_path), strict=False)

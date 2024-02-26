@@ -89,7 +89,8 @@ python3 -m llmshearing.utils.composer_to_hf $HF_MODEL_NAME $OUTPUT_PATH
 
 Additionally, you can use the following utility function to test the equivalence between the Hugging Face model and the converted Composer model:
 ```
-python3 -m llmshearing.utils.test_composer_hf_eq $HF_MODEL_NAME $OUTPUT_PATH
+MODEL_SIZE=7B
+python3 -m llmshearing.utils.test_composer_hf_eq $HF_MODEL_NAME $OUTPUT_PATH $MODEL_SIZE
 ```
 
 These functions exclusively work for LLaMA/LLaMA2 models. However, it should be straightforward to adapt them for use with other models such as Mistral-7B.

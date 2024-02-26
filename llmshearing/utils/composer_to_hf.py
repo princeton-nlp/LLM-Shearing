@@ -105,6 +105,13 @@ def save_composer_to_hf(composer_model_path, output_path=None, model_config:om =
     print(f"saved hf model to {output_path}")
    
 if __name__ == "__main__":
-    composer_model_path, output_path, other_args = sys.argv[1], sys.argv[2], sys.argv[3:]
-    cli_cfg = om.from_cli(other_args)
-    save_composer_to_hf(composer_model_path, output_path, cli_cfg)
+    func = sys.argv[1]
+    other_cli_args = sys.argv[2:]
+    if func == "save_hf_to_composer":
+        save_hf_to_composer(*other_cli_args)
+    elif func == "save_composer_to_hf":
+        composer_model_path, output_path, *other_args = sys.argv[2:]
+        cli_cfg = om.from_cli(other_args)
+        save_composer_to_hf(composer_model_path, output_path, cli_cfg)
+    else:
+        raise ValueError(f"func {func} not found")
