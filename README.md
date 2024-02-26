@@ -85,7 +85,7 @@ OUTPUT_PATH=models/Llama-2-7b-composer/state_dict.pt
 mkdir -p $(dirname $OUTPUT_PATH)
 
 # Convert the Hugging Face model to Composer key format
-python3 -m llmshearing.utils.composer_to_hf $HF_MODEL_NAME $OUTPUT_PATH
+python3 -m llmshearing.utils.composer_to_hf save_hf_to_composer $HF_MODEL_NAME $OUTPUT_PATH
 ```
 
 Additionally, you can use the following utility function to test the equivalence between the Hugging Face model and the converted Composer model:
@@ -128,7 +128,7 @@ NUM_HIDDEN_LAYERS=24
 INTERMEDIATE_SIZE=5504
 MODEL_NAME=Sheared-Llama-1.3B
 
-python3 -m llmshearing.utils.composer_to_hf $MODEL_PATH $OUTPUT_PATH \
+python3 -m llmshearing.utils.composer_to_hf save_composer_to_hf $MODEL_PATH $OUTPUT_PATH \
         model_class=${MODEL_CLASS} \
         hidden_size=${HIDDEN_SIZE} \
         num_attention_heads=${NUM_ATTENTION_HEADS} \
