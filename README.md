@@ -54,14 +54,16 @@ This codebase is built based on MosaicML's amazing [Composer package](https://gi
 ## Install Requirements
 **Step 1**: To get started with this repository, you'll need to follow these installation steps. Before proceeding, make sure you have [Pytorch](https://pytorch.org/get-started/previous-versions/) and [Flash Attention](https://github.com/Dao-AILab/flash-attention)  installed. You can do this via pip using the following commands:
 ```
-pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
-pip install flash-attn==1.0.3.post
+# pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+# pip install flash-attn==1.0.3.post
+pip install torch==2.1.0+cu121 torchvision==0.16.0+cu121 torchaudio==2.1.0+cu121 --index-url https://download.pytorch.org/whl/cu121
+pip install "flash-attn==2.3.2"    
 ```
 Please note that Flash Attention version 2 is not currently supported and may require manual modifications to the model file. 
+Update: the `flash-attn` version and corresponding interface in model are updated. Now it's compatible with Flash Attention 2.
 
 **Step 2**: Then install the rest of the required packages:
 ```
-cd llmshearing
 pip install -r requirement.txt
 ```
 

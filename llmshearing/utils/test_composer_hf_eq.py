@@ -25,7 +25,12 @@ def construct_example_cfg(model_size, path=None, add_l0_module=False):
         cfg = om.create({"name": "mosaic_llama_65b", "path": path,"init_device": "cpu", "d_model": 8192, "n_heads": 64, "n_layers": 80, "intermediate_size": 22016})
     
     # add default values
-    cfg = om.merge(cfg, om.create({"max_seq_len": 4096, "vocab_size": 32000, "init_std": 0.02, "attn_pdrop": 0.0, "resid_pdrop": 0.0, "emb_pdrop": 0.0, "attn_impl": "flash", "rms_norm_eps": 1e-5}))
+    # cfg = om.merge(cfg, om.create({"max_seq_len": 4096, "vocab_size": 32000, "init_std": 0.02, "attn_pdrop": 0.0, "resid_pdrop": 0.0, "emb_pdrop": 0.0, "attn_impl": "flash", "rms_norm_eps": 1e-5}))
+    # order reversed. Use cfg to override default, instead of the opposite
+    cfg = om.merge(
+        om.create({"max_seq_len": 4096, "vocab_size": 32000, "init_std": 0.02, "attn_pdrop": 0.0, "resid_pdrop": 0.0, "emb_pdrop": 0.0, "attn_impl": "flash", "rms_norm_eps": 1e-5}),
+        cfg
+    )
     if add_l0_module:
         cfg["l0_module"] = {"start_sparsity": 0, "target_sparsity": 0.6, "pruning_modules": ["head", "head_layer", "mlp", "intermediate", "hidden"], "lagrangian_warmup_steps": "320ba"}
     return cfg

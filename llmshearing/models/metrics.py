@@ -23,13 +23,23 @@ class DomainLanguageCrossEntropy(LanguageCrossEntropy):
 
         target = target.view(-1)
         logits = logits.view(target.shape[0], -1)
-        losses = self.loss_fn(logits, target)
+        # losses = self.loss_fn(logits, target)
 
         total_items = (target != self.ignore_index).sum()
+         if total_items.item() == 0:
+            return  # 👈 skip update to avoid NaN
+
+        losses = self.loss_fn(logits, target)
         self.total_items += total_items  #type: ignore (third-party)
 
         # accumulate loss over all batches
         self.sum_loss += losses.to(torch.float32)
+        
+    # override base class, to avoid zero division
+    def compute(self) -> torch.Tensor:
+        if self.total_items == 0:
+            return torch.tensor(0.0, dtype=torch.float32, device=self.sum_loss.device)
+        return self.sum_loss / self.total_items
 
 
 class DomainCount(Metric):

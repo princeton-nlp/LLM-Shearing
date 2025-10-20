@@ -787,6 +787,7 @@ def flash_attn_fn(
     try:
         from flash_attn import bert_padding  # type: ignore
         from flash_attn import flash_attn_interface  # type: ignore
+        from flash_attn import flash_attn_func, flash_attn_varlen_func # for flash-attn-2
     except ImportError as e:
         raise e
 
@@ -815,18 +816,33 @@ def flash_attn_fn(
 
     dropout_p = dropout_p if training else 0.0
     
-    output_unpad = flash_attn_interface.flash_attn_unpadded_func(
-        query_unpad,
-        key_unpad,
-        value_unpad,
-        cu_seqlens_q,
-        cu_seqlens_k,
-        max_seqlen_q,
-        max_seqlen_k,
-        dropout_p,
+    # output_unpad = flash_attn_interface.flash_attn_unpadded_func(
+    #     query_unpad,
+    #     key_unpad,
+    #     value_unpad,
+    #     cu_seqlens_q,
+    #     cu_seqlens_k,
+    #     max_seqlen_q,
+    #     max_seqlen_k,
+    #     dropout_p,
+    #     softmax_scale=softmax_scale,
+    #     causal=is_causal,
+    #     return_attn_probs=needs_weights)
+    
+    # the flash-attn-2 interface
+    output_unpad = flash_attn_varlen_func(
+        q=query_unpad,
+        k=key_unpad,
+        v=value_unpad,
+        cu_seqlens_q=cu_seqlens_q,
+        cu_seqlens_k=cu_seqlens_k,
+        max_seqlen_q=max_seqlen_q,
+        max_seqlen_k=max_seqlen_k,
+        dropout_p=dropout_p,
         softmax_scale=softmax_scale,
         causal=is_causal,
-        return_attn_probs=needs_weights)
+        return_attn_probs=needs_weights,
+    )
 
     if head_z is not None:
         output_unpad = output_unpad * head_z # 1 * h * 1
